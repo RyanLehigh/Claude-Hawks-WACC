@@ -1,10 +1,10 @@
-# <Team name>: WACC for <Client firm>
+# <Claude Hawks WACC>: WACC for <Madison Square Garden Sports Corp.>
 
 > **CEO:** fill in every `<...>` below, then commit this file to `main`. It's the plan everyone (and every agent) works from.
 
 ## The question
 
-What is <Client firm> (<TICKER>)'s weighted average cost of capital, and what does it mean for the hurdle rate on its new projects?
+What is <Madison Square Garden Sports Corp.> (<MSGS>)'s weighted average cost of capital, and what does it mean for the hurdle rate on its new projects?
 
 ## The output (the one thing we ship)
 
