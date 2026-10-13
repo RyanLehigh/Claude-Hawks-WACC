@@ -1,10 +1,10 @@
-# <Claude Hawks WACC>: WACC for <Madison Square Garden Sports Corp.>
+# Claude Hawks WACC: WACC for Madison Square Garden Sports Corp.
 
 > **CEO:** fill in every `<...>` below, then commit this file to `main`. It's the plan everyone (and every agent) works from.
 
 ## The question
 
-What is <Madison Square Garden Sports Corp.> (<MSGS>)'s weighted average cost of capital, and what does it mean for the hurdle rate on its new projects?
+What is Madison Square Garden Sports Corp. (MSGS)'s weighted average cost of capital, and what does it mean for the hurdle rate on its new projects?
 
 ## The output (the one thing we ship)
 
@@ -29,10 +29,10 @@ A **WACC card**: one page, in our app, showing the WACC and every input behind i
 
 | Role | Name | GitHub username | Branch | Owns |
 |---|---|---|---|---|
-| CEO | <Ryan Sajwan> | <RyanLehigh> | `main` (reviews and merges) | this README, reviewing every pull request |
-| Developer | <Benjamin Andresen> | <bea228> | `dev-wacc` | `code/wacc.py` |
-| Product manager | <Jared Waldman> | <Jwald7> | `pm-app` | `app.py` |
-| Analyst | <Dylan Toland> | <DylanTolandLehigh> | `analyst-inputs` | `inputs/assumptions.csv` (every number has a source) |
+| CEO | Ryan Sajwan | RyanLehigh | `main` (reviews and merges) | this README, reviewing every pull request |
+| Developer | Benjamin Andresen | bea228 | `dev-wacc` | `code/wacc.py` |
+| Product manager | Jared Waldman | Jwald7 | `pm-app` | `app.py` |
+| Analyst | Dylan Toland | DylanTolandLehigh | `analyst-inputs` | `inputs/assumptions.csv` (every number has a source) |
 
 _Team of 3? The CEO is also the analyst._
 
