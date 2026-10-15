@@ -3,6 +3,7 @@
 Run from the repo root:   python code/wacc.py
 Reads:  inputs/assumptions.csv
 Writes: outputs/wacc.csv (one row; the columns are listed in README.md)
+        plus extras for the app: outputs/returns.csv, outputs/rolling_beta.csv, outputs/peers.csv
 
 Owner: the developer. Fill in the three TODO functions (your agent can help),
 then run it and check the numbers make sense before you open a pull request.
@@ -13,6 +14,10 @@ import yfinance as yf
 CLIENT = 'MSGS'  # Madison Square Garden Sports Corp. (set by the CEO in README.md)
 MKT = 'SPY'
 YEARS = 5
+ROLL = 252  # trading days in the rolling-beta window (about 1 year)
+# Listed sports / live-entertainment comparables, for context in the app
+PEERS = {'MSGE': 'MSG Entertainment', 'SPHR': 'Sphere Entertainment', 'BATRK': 'Atlanta Braves Holdings',
+         'FWONK': 'Formula One Group', 'MANU': 'Manchester United', 'LYV': 'Live Nation'}
 
 
 def get_returns(ticker, mkt=MKT, years=YEARS):
@@ -42,6 +47,25 @@ def compute_wacc(beta, a):
             'rd': a['rd'], 'tax': a['tax'], 'w_e': a['w_e'], 'w_d': a['w_d'], 'wacc': wacc}
 
 
+def rolling_beta(rets, ticker, mkt=MKT, window=ROLL):
+    """Beta over a trailing window of daily returns."""
+    roll = rets[ticker].rolling(window)
+    return (roll.cov(rets[mkt]) / rets[mkt].rolling(window).var()).dropna().rename('beta')
+
+
+def peer_betas(peers=PEERS, mkt=MKT, years=YEARS):
+    """5y daily beta vs. the market for each peer. Peers that fail to download are skipped."""
+    rows = []
+    for t, name in peers.items():
+        try:
+            r = get_returns(t, mkt, years)
+        except AssertionError:
+            print(f'skipping peer {t}: download failed')
+            continue
+        rows.append({'ticker': t, 'name': name, 'beta': estimate_beta(r, t, mkt), 'start': r.index.min().date()})
+    return pd.DataFrame(rows)
+
+
 if __name__ == '__main__':
     a = pd.read_csv('inputs/assumptions.csv', index_col='item')['value'].to_dict()
     assert abs(a['w_e'] + a['w_d'] - 1) < 1e-6, 'weights must sum to 1'
@@ -57,3 +81,12 @@ if __name__ == '__main__':
     cols = ['ticker', 'asof', 'beta', 'rf', 'mrp', 'cost_of_equity', 'rd', 'tax', 'w_e', 'w_d', 'wacc']
     pd.DataFrame([out])[cols].to_csv('outputs/wacc.csv', index=False)
     print(pd.DataFrame([out])[cols].T)
+
+    # Extras for the app (the app reads these; it never downloads anything itself)
+    rets.rename_axis('date').to_csv('outputs/returns.csv')
+    rolling_beta(rets, CLIENT).rename_axis('date').to_csv('outputs/rolling_beta.csv')
+    peers = peer_betas()
+    peers = pd.concat([pd.DataFrame([{'ticker': CLIENT, 'name': 'Madison Square Garden Sports',
+                                      'beta': beta, 'start': rets.index.min().date()}]), peers])
+    peers.to_csv('outputs/peers.csv', index=False)
+    print(peers)
